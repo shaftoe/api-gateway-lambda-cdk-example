@@ -1,0 +1,10 @@
+PROFILE := <put your AWS profile name here>
+export CDK_APP_NAME := apitest-mydomain-com
+export CDK_BASE_DOMAIN := apitest.mydomain.com
+export PUSHOVER_TOKEN := <your pushover token>
+export PUSHOVER_USERKEY := <your pushover userkey>
+
+export PUSHOVER_API_ENDPOINT := https://api.pushover.net/1/messages.json
+
+# OPTIONAL
+export CORS_ALLOW_ORIGIN := https://www.mydomain.com
