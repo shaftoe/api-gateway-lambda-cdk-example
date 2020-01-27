@@ -1,12 +1,7 @@
 include config.mk
 
 DIR := api
-CDK := cd $(DIR) && cdk --profile $(PROFILE)
-
-.ONESHELL: # Use virtualenv: https://stackoverflow.com/a/55404948
-
-venv:
-	@. $(DIR)/.env/bin/activate
+CDK := . $(DIR)/.env/bin/activate && cd $(DIR) && cdk --profile $(PROFILE)
 
 create_venv:
 	@# ensure correct Python version is used:
@@ -27,24 +22,24 @@ postinit:
 	@git mv -f src/stack.py $(DIR)/$(DIR)/$(DIR)_stack.py
 	@rm $(DIR)/source.bat
 
-requirements: venv
-	@cd $(DIR) && pip install -r requirements.txt
+requirements:
+	@. $(DIR)/.env/bin/activate && cd $(DIR) && pip install -r requirements.txt
 
-bootstrap: venv postinit requirements
+bootstrap: postinit requirements
 	@$(CDK) bootstrap
 
-synth: venv
+synth:
 	@$(CDK) synth
 
 deploy: requirements
 	@$(CDK) deploy
 	# TODO print apigw Target Domain Name for DNS
 
-destroy: venv
+destroy:
 	@$(CDK) destroy
 	@printf 'Remember to remove leftovers in CloudFormation\n'
 
-list: venv
+list:
 	@$(CDK) ls
 
 diff: requirements
