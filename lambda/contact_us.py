@@ -86,7 +86,7 @@ def handler(event, context):
         response.statusCode = 405
 
     except Exception as error:
-        response.error = error
         LOG.fatal(error)
+        response.error = error
 
     return response.out()

@@ -4,16 +4,9 @@ DIR  		  := api
 VENV 		  := . $(DIR)/.env/bin/activate
 CDK_NOENV := cd $(DIR) && cdk --profile $(AWS_PROFILE)
 CDK  		  := $(VENV) && $(CDK_NOENV)
-CHECK_PY  := if [ $(shell python --version 2>&1 | cut -c 8) -eq "3" ]; then true;
 
-install_venv: # in the unfortunate case your workstation is still running Python v2
+init: # Needed only one time to bootstrap development
 	@mkdir -p $(DIR)
-	@$(CHECK_PY) else python3 -m venv $(DIR)/.env; fi
-
-check_python:
-	@$(CHECK_PY) else printf 'error: Python v3 required\n'; exit 1; fi
-
-init: install_venv # Needed only one time to bootstrap development
 	@$(CDK_NOENV) init app --language python
 	@rm -rf $(DIR)/.git
 	@git mv lambda $(DIR)
@@ -22,13 +15,13 @@ init: install_venv # Needed only one time to bootstrap development
 	@git mv -f src/stack.py $(DIR)/$(DIR)/$(DIR)_stack.py
 	@rm $(DIR)/source.bat
 
-requirements: check_python
+requirements:
 	@$(VENV) && cd $(DIR) && pip install -r requirements.txt
 
-bootstrap: check_python requirements
+bootstrap: requirements
 	@$(CDK) bootstrap
 
-synth: check_python
+synth:
 	@$(CDK) synth
 
 deploy: requirements
@@ -45,11 +38,11 @@ deploy: requirements
 		| tr -d '"'
 	@printf '###########################################################################\n'
 
-destroy: check_python
+destroy:
 	@$(CDK) destroy
 	@printf 'Remember to remove leftovers in CloudFormation\n'
 
-list: check_python
+list:
 	@$(CDK) ls
 
 diff: requirements

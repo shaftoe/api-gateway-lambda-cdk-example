@@ -19,7 +19,7 @@ class ApiStack(core.Stack):
             code=aws_lambda.Code.asset('lambda'),
             handler='contact_us.handler',
             environment={
-                'CORS_ALLOW_ORIGIN': environ['CORS_ALLOW_ORIGIN'],
+                'CORS_ALLOW_ORIGIN': environ.get('CORS_ALLOW_ORIGIN', '*'),
                 'PUSHOVER_API_ENDPOINT': environ['PUSHOVER_API_ENDPOINT'],
                 'PUSHOVER_TOKEN': environ['PUSHOVER_TOKEN'],
                 'PUSHOVER_USERKEY': environ['PUSHOVER_USERKEY'],
